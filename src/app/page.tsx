@@ -170,10 +170,23 @@ export default function Home() {
 
       <section className="screen contact" id="contact">
         <div className="screen-content contact-content">
-          <h2>Contact</h2>
-          <a className="email" href="mailto:aavillatorouriona@gmail.com">
-            aavillatorouriona@gmail.com
-          </a>
+          <Image
+            className="contact-star"
+            src="/star-spinning.gif"
+            alt="Spinning star"
+            width={200}
+            height={194}
+            unoptimized
+          />
+          <h2>Reach out to me on:</h2>
+          <div className="contact-links">
+            <a href="mailto:aavillatorouriona@gmail.com" aria-label="Email Adrian" title="Email">
+              (email)
+            </a>
+            <a href="https://www.linkedin.com/in/adrian-villatoro" target="_blank" rel="noreferrer" aria-label="Adrian on LinkedIn" title="LinkedIn">
+              (linkedin)
+            </a>
+          </div>
         </div>
         <SectionChevron href="#home" label="Back to top" up />
       </section>

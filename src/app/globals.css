@@ -160,9 +160,26 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
 .entry p { grid-column: 1 / -1; font-size: 14px; color: var(--gray); margin-top: 6px; }
 .skills { color: var(--gray); font-size: 15px; line-height: 1.9; }
 .contact-content { text-align: center; }
-.contact h2 { margin-bottom: 28px; }
-.email { font-size: clamp(16px, 2.5vw, 24px); color: var(--gray); text-decoration: underline; text-underline-offset: 8px; text-decoration-color: var(--line); overflow-wrap: anywhere; }
-.email:hover { color: var(--white); text-decoration-color: var(--gray); }
+.screen.contact {
+  padding-top: clamp(12px, 3svh, 40px);
+  padding-bottom: 64px;
+}
+.contact-star {
+  display: block;
+  width: min(160px, 24svh);
+  height: auto;
+  margin: 0 auto clamp(12px, 3svh, 28px);
+  object-fit: contain;
+}
+.contact h2 {
+  font-family: "VT323", monospace;
+  font-size: clamp(32px, 4vw, 42px);
+  font-weight: 400;
+  margin-bottom: clamp(12px, 3svh, 28px);
+}
+.contact-links { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.contact-links a { display: grid; place-items: center; min-height: 44px; padding-inline: 12px; color: var(--gray); }
+.contact-links a:hover { color: var(--white); text-decoration: underline; text-underline-offset: 4px; }
 
 @media (max-width: 760px) {
   :root { --header-height: 64px; }
