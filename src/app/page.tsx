@@ -31,6 +31,63 @@ const projects = [
   },
 ];
 
+// stars only run down the empty gutters either side of the content column, in
+// the first and last sections. x is px from centre rather than a percentage, so
+// on a narrow viewport they slide past the edge and get clipped instead of
+// landing on the text. seeded, because Math.random would desync hydration.
+function makeStars(
+  seed: number,
+  count: number,
+  near: number,
+  far: number,
+  top: number,
+  bottom: number,
+) {
+  let state = seed;
+  const rand = () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 0x100000000;
+  };
+  const chars = ["*", "+", ".", "*", "+"];
+  // cycled, not drawn at random - two thirds yellow, and every run of nine is
+  // guaranteed one of each accent rather than leaving a colour out by chance
+  const tints = ["yellow", "yellow", "white", "yellow", "yellow", "purple", "yellow", "yellow", "blue"];
+  return Array.from({ length: count }, (_, i) => ({
+    x: Math.round((near + rand() * (far - near)) * (rand() < 0.5 ? -1 : 1)),
+    y: +(top + rand() * (bottom - top)).toFixed(2),
+    char: chars[Math.floor(rand() * chars.length)],
+    size: +(rand() * 5 + 10).toFixed(1),
+    delay: +(rand() * 7).toFixed(2),
+    tint: tints[i % tints.length],
+  }));
+}
+
+// near bound clears the 470px half-width of the content column; far bound keeps
+// most of them on screen at 1280px wide
+const introStars = makeStars(20260920, 14, 490, 700, 14, 90);
+const contactStars = makeStars(77712345, 12, 330, 640, 8, 90);
+
+function Starfield({ stars }: { stars: ReturnType<typeof makeStars> }) {
+  return (
+    <div className="starfield" aria-hidden="true">
+      {stars.map((star, i) => (
+        <span
+          key={i}
+          className={`star star-${star.tint}`}
+          style={{
+            left: `calc(50% + ${star.x}px)`,
+            top: `${star.y}%`,
+            fontSize: `${star.size}px`,
+            animationDelay: `${star.delay}s`,
+          }}
+        >
+          {star.char}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function SectionChevron({ href, label, up = false }: { href: string; label: string; up?: boolean }) {
   return (
     <a className="section-chevron" href={href} aria-label={label}>
@@ -54,6 +111,7 @@ export default function Home() {
       </header>
 
       <section className="screen intro" id="home">
+        <Starfield stars={introStars} />
         <div className="screen-content intro-content">
           <div className="hero-copy">
           <h1 className="hero-name">adrian villatoro</h1>
@@ -205,6 +263,7 @@ export default function Home() {
       </section>
 
       <section className="screen contact" id="contact">
+        <Starfield stars={contactStars} />
         <div className="screen-content contact-content">
           <Image
             className="contact-star"
