@@ -48,15 +48,18 @@ body {
 .star {
   position: absolute;
   line-height: 1;
-  animation: star-twinkle 7s ease-in-out infinite;
+  opacity: 0.55;
+  animation: star-twinkle 5s ease-in-out infinite;
 }
 .star-yellow { color: var(--star-yellow); }
 .star-white { color: var(--star-white); }
 .star-purple { color: var(--star-purple); }
 .star-blue { color: var(--star-blue); }
+/* lit most of the cycle with one quick dip - the dark stretch is 16% of the
+   duration, so a star is back on well under a second after going out */
 @keyframes star-twinkle {
-  0%, 100% { opacity: 0.22; }
-  50% { opacity: 0.55; }
+  0%, 42%, 58%, 100% { opacity: 0.55; }
+  50% { opacity: 0.08; }
 }
 @media (prefers-reduced-motion: reduce) {
   .star { animation: none; opacity: 0.35; }
@@ -245,7 +248,9 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
   .intro .hero-name { margin-bottom: 16px; }
   .intro .intro-actions { margin-top: 20px; }
   .project-list, .background-grid { grid-template-columns: 1fr; gap: 32px; }
-  .hobbies-content { grid-template-columns: 1fr; gap: clamp(12px, 3svh, 28px); text-align: center; }
+  .hobbies-content { grid-template-columns: 1fr; gap: clamp(12px, 3svh, 28px); }
+  /* logos stay centred via flex; only the paragraph reads better ranged left */
+  .hobbies-text { text-align: left; max-width: 34rem; margin-inline: auto; }
   .hobbies-logos { --logo-height: min(100px, 14svh); gap: 24px; }
   .section-title { margin-bottom: 32px; }
   h2 { font-size: 26px; }

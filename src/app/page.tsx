@@ -31,41 +31,69 @@ const projects = [
   },
 ];
 
-// stars only run down the empty gutters either side of the content column, in
-// the first and last sections. x is px from centre rather than a percentage, so
-// on a narrow viewport they slide past the edge and get clipped instead of
-// landing on the text. seeded, because Math.random would desync hydration.
-function makeStars(
-  seed: number,
-  count: number,
-  near: number,
-  far: number,
-  top: number,
-  bottom: number,
-) {
+function makeRand(seed: number) {
   let state = seed;
-  const rand = () => {
+  return () => {
     state = (state * 1664525 + 1013904223) >>> 0;
     return state / 0x100000000;
   };
+}
+
+// two zones per section, both kept to the top three quarters: a column down each
+// gutter beside the content, and a strip across the full width above it. gutter
+// x is px from centre so those stars clip off-screen rather than drifting onto
+// the text when the window narrows; the strip clears the content vertically, so
+// percentages are safe there. seeded - Math.random would desync hydration.
+function makeStars(seed: number, gutterCount: number, near: number, far: number, stripCount: number) {
+  const rand = makeRand(seed);
   const chars = ["*", "+", ".", "*", "+"];
   // cycled, not drawn at random - two thirds yellow, and every run of nine is
   // guaranteed one of each accent rather than leaving a colour out by chance
   const tints = ["yellow", "yellow", "white", "yellow", "yellow", "purple", "yellow", "yellow", "blue"];
-  return Array.from({ length: count }, (_, i) => ({
-    x: Math.round((near + rand() * (far - near)) * (rand() < 0.5 ? -1 : 1)),
-    y: +(top + rand() * (bottom - top)).toFixed(2),
-    char: chars[Math.floor(rand() * chars.length)],
-    size: +(rand() * 5 + 10).toFixed(1),
-    delay: +(rand() * 7).toFixed(2),
-    tint: tints[i % tints.length],
-  }));
+  let n = 0;
+  const star = (left: string, y: number) => {
+    const duration = +(3.4 + rand() * 3).toFixed(2);
+    return {
+      left,
+      top: `${y.toFixed(2)}%`,
+      char: chars[Math.floor(rand() * chars.length)],
+      size: +(rand() * 5 + 10).toFixed(1),
+      duration,
+      // negative, so each star loads already partway through its cycle. a
+      // positive delay would park every star at its default opacity until the
+      // timer fired, which is why they all came up lit on refresh.
+      delay: +(-rand() * duration).toFixed(2),
+      tint: tints[n++ % tints.length],
+    };
+  };
+
+  const stars = [];
+
+  // one star per band down each gutter, jittered inside its band. pure random
+  // clumps three in a corner and leaves gaps; banding keeps the spacing even.
+  const perSide = Math.round(gutterCount / 2);
+  const bandHeight = (75 - 20) / perSide;
+  for (let side = 0; side < 2; side += 1) {
+    for (let row = 0; row < perSide; row += 1) {
+      const x = Math.round((near + rand() * (far - near)) * (side === 0 ? -1 : 1));
+      // right column sits a quarter band lower so the sides don't read as pairs
+      const frac = 0.2 + side * 0.25 + rand() * 0.4;
+      stars.push(star(`calc(50% + ${x}px)`, 20 + bandHeight * (row + frac)));
+    }
+  }
+
+  // strip above the content - high enough to stay off the name and yoshi even
+  // on a short viewport, where the centred content creeps upward
+  const colWidth = 92 / stripCount;
+  for (let col = 0; col < stripCount; col += 1) {
+    stars.push(star(`${(4 + colWidth * (col + 0.15 + rand() * 0.7)).toFixed(2)}%`, 3 + rand() * 12));
+  }
+
+  return stars;
 }
 
-// near bound clears the 470px half-width of the content column; far bound keeps
-// most of them on screen at 1280px wide
-const introStars = makeStars(20260920, 14, 490, 700, 14, 90);
-const contactStars = makeStars(77712345, 12, 330, 640, 8, 90);
+const introStars = makeStars(20260920, 26, 490, 700, 16);
+const contactStars = makeStars(77712345, 24, 330, 640, 12);
 
 function Starfield({ stars }: { stars: ReturnType<typeof makeStars> }) {
   return (
@@ -75,9 +103,10 @@ function Starfield({ stars }: { stars: ReturnType<typeof makeStars> }) {
           key={i}
           className={`star star-${star.tint}`}
           style={{
-            left: `calc(50% + ${star.x}px)`,
-            top: `${star.y}%`,
+            left: star.left,
+            top: star.top,
             fontSize: `${star.size}px`,
+            animationDuration: `${star.duration}s`,
             animationDelay: `${star.delay}s`,
           }}
         >
