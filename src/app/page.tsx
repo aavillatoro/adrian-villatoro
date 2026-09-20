@@ -180,17 +180,25 @@ export default function Home() {
               Outside of coding, I enjoy many different hobbies. I play a ton of
               Valorant and eventually hit Radiant. As IGL, I&apos;ve helped my
               uni win over $1,000 in earnings across LANs in the east coast!
-              I&apos;m an avid Liverpool FC supporter (YNWA) and recently picked
-              up bouldering.
+              I&apos;m also an avid Liverpool FC supporter (YNWA) and recently
+              picked up bouldering.
             </p>
-            <Image
-              className="hobbies-gif"
-              src="/liverpool-fc-youll-never-walk-alone.gif"
-              alt="Liverpool FC - You'll Never Walk Alone"
-              width={260}
-              height={260}
-              unoptimized
-            />
+            <div className="hobbies-logos">
+              <Image
+                className="hobbies-logo hobbies-logo-radiant"
+                src="/valorant-radiant.png"
+                alt="Valorant Radiant rank"
+                width={1024}
+                height={1024}
+              />
+              <Image
+                className="hobbies-logo"
+                src="/liverpool.png"
+                alt="Liverpool FC liver bird"
+                width={280}
+                height={430}
+              />
+            </div>
           </div>
         </div>
         <SectionChevron href="#contact" label="Scroll to contact" />
