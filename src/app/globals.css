@@ -154,6 +154,21 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
 .background-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
 .background-grid h3 { font-weight: 500; font-size: 14px; margin-bottom: 24px; color: var(--gray); }
 .background-grid h3:not(:first-child) { margin-top: 40px; }
+.hobbies-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 80px;
+  align-items: center;
+}
+.hobbies-text { color: var(--gray); font-size: 17px; line-height: 1.85; }
+.hobbies-gif {
+  display: block;
+  justify-self: center;
+  width: 260px;
+  height: 260px;
+  max-width: 100%;
+  object-fit: contain;
+}
 .entry { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; margin-bottom: 28px; }
 .entry strong { font-size: 16px; font-weight: 500; }
 .entry span { font-size: 12px; color: var(--gray); padding-top: 3px; }
@@ -192,6 +207,8 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
   .intro .hero-name { margin-bottom: 16px; }
   .intro .intro-actions { margin-top: 20px; }
   .project-list, .background-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hobbies-content { grid-template-columns: 1fr; gap: clamp(12px, 3svh, 28px); text-align: center; }
+  .hobbies-gif { width: min(180px, 26svh); height: min(180px, 26svh); }
   .section-title { margin-bottom: 32px; }
   h2 { font-size: 26px; }
 }

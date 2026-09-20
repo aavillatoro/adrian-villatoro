@@ -48,6 +48,7 @@ export default function Home() {
         <nav aria-label="Primary navigation">
           <a href="#work">work</a>
           <a href="#background">background</a>
+          <a href="#hobbies">hobbies</a>
           <a href="#contact">contact</a>
         </nav>
       </header>
@@ -97,13 +98,13 @@ export default function Home() {
             loading="eager"
           />
         </div>
-        <SectionChevron href="#work" label="Scroll to selected work" />
+        <SectionChevron href="#work" label="Scroll to recent projects" />
       </section>
 
       <section className="screen work" id="work">
         <div className="screen-content">
           <div className="section-title">
-            <h2>Selected work</h2>
+            <h2>recent projects</h2>
             <span>2025-2026</span>
           </div>
 
@@ -126,7 +127,7 @@ export default function Home() {
       <section className="screen background" id="background">
         <div className="screen-content">
           <div className="section-title">
-            <h2>Background</h2>
+            <h2>background</h2>
           </div>
 
           <div className="background-grid">
@@ -163,6 +164,33 @@ export default function Home() {
                 <p>Valorant Team Captain</p>
               </div>
             </div>
+          </div>
+        </div>
+        <SectionChevron href="#hobbies" label="Scroll to hobbies" />
+      </section>
+
+      <section className="screen hobbies" id="hobbies">
+        <div className="screen-content">
+          <div className="section-title">
+            <h2>hobbies</h2>
+          </div>
+
+          <div className="hobbies-content">
+            <p className="hobbies-text">
+              Outside of coding, I enjoy many different hobbies. I play a ton of
+              Valorant and eventually hit Radiant. As IGL, I&apos;ve helped my
+              uni win over $1,000 in earnings across LANs in the east coast!
+              I&apos;m an avid Liverpool FC supporter (YNWA) and recently picked
+              up bouldering.
+            </p>
+            <Image
+              className="hobbies-gif"
+              src="/liverpool-fc-youll-never-walk-alone.gif"
+              alt="Liverpool FC - You'll Never Walk Alone"
+              width={260}
+              height={260}
+              unoptimized
+            />
           </div>
         </div>
         <SectionChevron href="#contact" label="Scroll to contact" />
