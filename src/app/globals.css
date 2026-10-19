@@ -243,7 +243,7 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
 .project-toggle { color: var(--gray); font-size: 16px; line-height: 1; width: 12px; text-align: center; }
 .project-toggle::before { content: "+"; }
 .project-toggle[data-open="true"]::before { content: "\2212"; }
-.win-card.is-open h3 { color: var(--frame-light); }
+.win-card.is-open h3 { color: var(--frame-mid); }
 /* open card spans the row and goes first, pushing its neighbour down. the
    text keeps its column and the image takes the other one. */
 .win-card.is-open {
