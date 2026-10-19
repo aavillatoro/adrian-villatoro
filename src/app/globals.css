@@ -84,10 +84,22 @@ nav {
   width: min(440px, calc(100% - 64px));
   justify-content: space-between;
   color: var(--gray);
-  font-size: 14px;
+  font-family: "VT323", monospace;
+  font-size: 22px;
 }
-nav a { padding: 12px 8px; }
-nav a:hover { color: var(--white); }
+/* transparent border reserves the space so the box appears without a shift.
+   square corners, no blur, to read like a gba menu cursor. */
+nav a {
+  padding: 4px 10px;
+  line-height: 1;
+  border: 2px solid transparent;
+}
+nav a:hover { color: var(--white); border-color: var(--white); }
+nav a:focus-visible { outline: none; color: var(--white); border-color: var(--white); }
+@media (max-width: 520px) {
+  nav { width: calc(100% - 32px); font-size: 19px; }
+  nav a { padding-inline: 6px; }
+}
 
 .screen {
   position: relative;
@@ -178,6 +190,13 @@ nav a:hover { color: var(--white); }
   margin-bottom: 48px;
 }
 h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.025em; }
+.section-title h2 {
+  font-family: "VT323", monospace;
+  font-size: clamp(32px, 4vw, 42px);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
 .section-title > span, .project-title time { color: var(--gray); font-size: 13px; }
 .project-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 64px; row-gap: 36px; }
 .project-list article { padding-top: 24px; border-top: 1px solid var(--line); }
