@@ -1,6 +1,32 @@
 import Image from "next/image";
+import WinRow, { type Project } from "./win-row";
 
-const projects = [
+const projects: Project[] = [
+  {
+    title: "Libreta",
+    date: "2026",
+    summary:
+      "Winner, Finance Track at Latinos x AI Hackathon NYC. Voice app where cash vendors log sales in Spanish and get English P&L statements for lenders.",
+    stack: "TypeScript / React / ElevenLabs / Base44",
+    image: "/projects/libreta-ledger.png",
+    links: [
+      { label: "github", href: "https://github.com/aavillatoro/libreta" },
+      { label: "devpost", href: "https://devpost.com/software/libreta" },
+      { label: "live demo", href: "https://libreta-942cd7e9.base44.app" },
+    ],
+  },
+  {
+    title: "burn402",
+    date: "2026",
+    summary:
+      "Winner, Best Use of Solana (MLH) at VTHacks 2026. AI agents negotiate for, pay for, and provision real servers to train custom models within a set budget.",
+    stack: "TypeScript / Next.js / Solana / x402 / Arweave",
+    image: "/projects/burn402-plans.jpg",
+    links: [
+      { label: "github", href: "https://github.com/aykk/burn402" },
+      { label: "devpost", href: "https://devpost.com/software/burn402" },
+    ],
+  },
   {
     title: "ResearchFlow",
     date: "2026",
@@ -196,16 +222,19 @@ export default function Home() {
           </div>
 
           <div className="project-list">
-            {projects.map((project) => (
-              <article key={project.title}>
-                <div className="project-title">
-                  <h3>{project.title}</h3>
-                  <time>{project.date}</time>
-                </div>
-                <p>{project.summary}</p>
-                <small>{project.stack}</small>
-              </article>
-            ))}
+            <WinRow projects={projects.filter((project) => project.links)} />
+            {projects
+              .filter((project) => !project.links)
+              .map((project) => (
+                <article key={project.title}>
+                  <div className="project-title">
+                    <h3>{project.title}</h3>
+                    <time>{project.date}</time>
+                  </div>
+                  <p>{project.summary}</p>
+                  <small>{project.stack}</small>
+                </article>
+              ))}
           </div>
         </div>
         <SectionChevron href="#background" label="Scroll to background" />
@@ -235,6 +264,11 @@ export default function Home() {
 
             <div>
               <h3>Experience</h3>
+              <div className="entry">
+                <strong>Van Leeuwen Ice Cream</strong>
+                <span>2026</span>
+                <p>Server</p>
+              </div>
               <div className="entry">
                 <strong>Starbucks Coffee Company</strong>
                 <span>2023-2025</span>
