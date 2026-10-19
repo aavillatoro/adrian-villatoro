@@ -53,6 +53,40 @@ function burst(from: Element) {
   }
 }
 
+const corners = ["tl", "tr", "bl", "br"];
+// a right triangle around each corner: the + on the diagonal, one step along
+// the horizontal edge and one along the vertical. css flips the steps per
+// corner so they always point inward.
+const triangle = [
+  { char: "+", x: 0, y: 0 },
+  { char: "*", x: 1, y: 0 },
+  { char: ".", x: 0, y: 1 },
+];
+
+// fixed rather than random so each character keeps its rhythm across
+// re-renders. same ranges as the intro stars, and negative delays so they
+// start mid-cycle instead of all lit at once.
+const twinkle = Array.from({ length: 12 }, (_, i) => {
+  const duration = 3.4 + ((i * 7) % 10) * 0.3;
+  return { animationDuration: `${duration}s`, animationDelay: `${-(((i * 13) % 17) / 17) * duration}s` };
+});
+
+function AsciiFrame() {
+  return (
+    <div className="ascii-frame" aria-hidden="true">
+      {corners.map((corner, c) => (
+        <span key={corner} className={`ascii-corner ascii-${corner}`}>
+          {triangle.map((cell, i) => (
+            <span key={i} style={{ ...twinkle[c * 3 + i], "--x": cell.x, "--y": cell.y } as React.CSSProperties}>
+              {cell.char}
+            </span>
+          ))}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 // the open card takes the whole row with its image in the other column, so
 // the text stays put and the other card moves down a row
 export default function WinRow({ projects }: { projects: Project[] }) {
@@ -109,14 +143,17 @@ export default function WinRow({ projects }: { projects: Project[] }) {
               )}
             </div>
             {isOpen && project.image && (
-              <Image
-                className="project-image win-image"
-                src={project.image}
-                alt={`${project.title} screenshot`}
-                width={1600}
-                height={900}
-                unoptimized
-              />
+              <div className="win-image">
+                <Image
+                  className="project-image"
+                  src={project.image}
+                  alt={`${project.title} screenshot`}
+                  width={1600}
+                  height={900}
+                  unoptimized
+                />
+                <AsciiFrame />
+              </div>
             )}
           </article>
         );

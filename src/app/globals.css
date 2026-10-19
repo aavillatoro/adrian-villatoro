@@ -17,6 +17,8 @@
   --star-white: #f2efff;
   --star-purple: #b89bff;
   --star-blue: #7fc3ff;
+  --frame-light: #e4d9ff;
+  --frame-mid: #b89bff;
   --header-height: 72px;
 }
 
@@ -205,6 +207,23 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
 .project-list p { color: var(--gray); font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
 .project-list small { display: block; color: var(--gray); font-size: 12px; line-height: 1.8; }
 .project-list { align-items: start; }
+/* isolate so the hover panel can sit behind the card's text at z-index -1 */
+.project-list article { position: relative; isolation: isolate; }
+/* hover panel: darker sky with crt scanlines, rounded to match the image
+   frame, and a fade in three steps rather than a smooth one */
+.project-list article::before {
+  content: "";
+  position: absolute;
+  inset: 0 -16px -16px;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.28) 0 1px, transparent 1px 3px),
+    #0b0b22;
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.18s steps(3);
+}
+.project-list article:hover::before { opacity: 1; }
 .win-card { position: relative; }
 .win-card .project-title h3 { margin-right: auto; }
 .win-toggle {
@@ -224,7 +243,7 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
 .project-toggle { color: var(--gray); font-size: 16px; line-height: 1; width: 12px; text-align: center; }
 .project-toggle::before { content: "+"; }
 .project-toggle[data-open="true"]::before { content: "\2212"; }
-.win-card.is-open h3 { color: var(--star-yellow); }
+.win-card.is-open h3 { color: var(--frame-light); }
 /* open card spans the row and goes first, pushing its neighbour down. the
    text keeps its column and the image takes the other one. */
 .win-card.is-open {
@@ -234,25 +253,60 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
   grid-template-columns: 1fr 1fr;
   column-gap: 64px;
   align-items: start;
-  border-top-color: var(--star-yellow);
 }
 .win-card.is-open[data-side="right"] .win-text { grid-column: 2; grid-row: 1; }
 .win-card.is-open[data-side="right"] .win-image { grid-column: 1; grid-row: 1; }
 /* above the stretched toggle so the links stay clickable */
 .win-card .project-links { position: relative; z-index: 1; margin-top: 12px; }
-/* wipes open from the text's side */
-.win-image { animation: win-image-from-left 0.6s cubic-bezier(0.2, 0.7, 0.3, 1); }
-.win-card[data-side="right"] .win-image { animation-name: win-image-from-right; }
-@keyframes win-image-from-left {
-  from { clip-path: inset(0 100% 0 0); opacity: 0; transform: translateX(-16px); }
-  to { clip-path: inset(0); opacity: 1; transform: none; }
+.win-image {
+  position: relative;
+  animation: win-image-open 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-@keyframes win-image-from-right {
-  from { clip-path: inset(0 0 0 100%); opacity: 0; transform: translateX(16px); }
-  to { clip-path: inset(0); opacity: 1; transform: none; }
+/* opens outward from the centre. ends at a negative inset wide enough that
+   the outline and ascii corners outside the box aren't clipped on the last frame. */
+@keyframes win-image-open {
+  from { clip-path: inset(0 50% 0 50%); opacity: 0; }
+  to { clip-path: inset(-32px); opacity: 1; }
 }
+.ascii-frame {
+  /* x is smaller because a cell is 8px wide but 16px tall; both centre the + 9px off the image */
+  --ascii-x: -13px;
+  --ascii-y: -17px;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  color: var(--frame-light);
+  font-family: "VT323", monospace;
+  font-size: 16px;
+  line-height: 16px;
+}
+.ascii-corner { position: absolute; width: 8px; height: 16px; }
+.ascii-corner span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  text-align: center;
+  transform: translate(calc(var(--sx) * var(--x) * 12px), calc(var(--sy) * var(--y) * 14px));
+  animation: ascii-twinkle 5s ease-in-out infinite;
+}
+/* step direction per corner, so the legs run along the image's edges */
+.ascii-tl { --sx: 1; --sy: 1; }
+.ascii-tr { --sx: -1; --sy: 1; }
+.ascii-bl { --sx: 1; --sy: -1; }
+.ascii-br { --sx: -1; --sy: -1; }
+/* the intro stars' rhythm, but from full brightness */
+@keyframes ascii-twinkle {
+  0%, 42%, 58%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+.ascii-tl { top: var(--ascii-y); left: var(--ascii-x); }
+.ascii-tr { top: var(--ascii-y); right: var(--ascii-x); }
+.ascii-bl { bottom: var(--ascii-y); left: var(--ascii-x); }
+.ascii-br { bottom: var(--ascii-y); right: var(--ascii-x); }
 @media (prefers-reduced-motion: reduce) {
-  .win-image { animation: none; }
+  .win-image, .ascii-corner span { animation: none; }
 }
 .confetti-star {
   position: fixed;
@@ -269,7 +323,13 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
   aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: left top;
-  border: 1px solid var(--line);
+  /* purple gradient border with a black outline. the gradient is a background
+     showing through a transparent border because border-image can't be
+     rounded; the screenshot itself covers the rest of the background. */
+  border: 6px solid transparent;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--frame-light), var(--frame-mid), #9a84f0) border-box;
+  box-shadow: 0 0 0 4px #000;
 }
 .project-links { display: flex; flex-wrap: wrap; column-gap: 24px; margin-top: 4px; }
 .background-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
@@ -336,7 +396,8 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
   .intro .intro-actions { margin-top: 20px; }
   .project-list, .background-grid { grid-template-columns: 1fr; gap: 32px; }
   /* one column: nothing to push aside, so the image just opens under the text */
-  .win-card.is-open { order: 0; grid-template-columns: 1fr; row-gap: 20px; }
+  /* gap clears the ascii corners above the image */
+  .win-card.is-open { order: 0; grid-template-columns: 1fr; row-gap: 32px; }
   .win-card.is-open[data-side] .win-text, .win-card.is-open[data-side] .win-image { grid-column: 1; grid-row: auto; }
   .hobbies-content { grid-template-columns: 1fr; gap: clamp(12px, 3svh, 28px); }
   /* logos stay centred via flex; only the paragraph reads better ranged left */
@@ -346,8 +407,7 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
   h2 { font-size: 26px; }
 }
 @media (max-width: 380px) {
-  .screen { padding-inline: 20px; }
-  .entry { grid-template-columns: 1fr; }
+  .screen { padding-inline: 20px; }  .entry { grid-template-columns: 1fr; }
   .entry span { padding-top: 0; }
 }
 @media (max-height: 650px) {

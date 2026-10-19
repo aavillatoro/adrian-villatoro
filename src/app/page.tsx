@@ -8,7 +8,7 @@ const projects: Project[] = [
     summary:
       "Winner, Finance Track at Latinos x AI Hackathon NYC. Voice app where cash vendors log sales in Spanish and get English P&L statements for lenders.",
     stack: "TypeScript / React / ElevenLabs / Base44",
-    image: "/projects/libreta-ledger.png",
+    image: "/projects/libreta-ledger-crop.png",
     links: [
       { label: "github", href: "https://github.com/aavillatoro/libreta" },
       { label: "devpost", href: "https://devpost.com/software/libreta" },
@@ -21,7 +21,7 @@ const projects: Project[] = [
     summary:
       "Winner, Best Use of Solana (MLH) at VTHacks 2026. AI agents negotiate for, pay for, and provision real servers to train custom models within a set budget.",
     stack: "TypeScript / Next.js / Solana / x402 / Arweave",
-    image: "/projects/burn402-plans.jpg",
+    image: "/projects/burn402-plans-crop.jpg",
     links: [
       { label: "github", href: "https://github.com/aykk/burn402" },
       { label: "devpost", href: "https://devpost.com/software/burn402" },
