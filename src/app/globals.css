@@ -15,8 +15,6 @@
   --line: #2b2b5a;
   --star-yellow: #ffd86b;
   --star-white: #f2efff;
-  --star-purple: #b89bff;
-  --star-blue: #7fc3ff;
   --frame-light: #e4d9ff;
   --frame-mid: #b89bff;
   --header-height: 72px;
@@ -39,32 +37,51 @@ body {
 }
 ::selection { background: var(--white); color: var(--sky); }
 
-.starfield {
+.night-sky {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
-  font-family: "VT323", monospace;
+  /* fades the bottom ~16% into the page background. the mid stop eases the
+     ramp so it doesn't read as a band. */
+  mask-image: linear-gradient(to bottom, #000 84%, rgba(0, 0, 0, 0.45) 92%, transparent 100%);
 }
-.star {
-  position: absolute;
-  line-height: 1;
-  opacity: 0.55;
-  animation: star-twinkle 5s ease-in-out infinite;
+.night-sky svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* the top-pinned layer slides down over the clouds on a wide window. the
+   cloud band is 155/1920 of the width there, so fade out just above it. */
+.night-sky-raised {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 10vw), transparent calc(100% - 8vw));
 }
-.star-yellow { color: var(--star-yellow); }
-.star-white { color: var(--star-white); }
-.star-purple { color: var(--star-purple); }
-.star-blue { color: var(--star-blue); }
-/* lit most of the cycle with one quick dip - the dark stretch is 16% of the
-   duration, so a star is back on well under a second after going out */
-@keyframes star-twinkle {
-  0%, 42%, 58%, 100% { opacity: 0.55; }
-  50% { opacity: 0.08; }
+/* svg elements scale and rotate around their own centre with these */
+.night-sky image, .night-sky circle { transform-box: fill-box; transform-origin: center; }
+/* lit most of the cycle with one quick dip, so a star is back on well under a second after going out */
+.night-dots { animation: night-twinkle 5s ease-in-out infinite; }
+@keyframes night-twinkle {
+  0%, 42%, 58%, 100% { opacity: 1; }
+  50% { opacity: 0.12; }
+}
+.night-star { animation: night-bob 5s ease-in-out infinite; }
+@keyframes night-bob {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+.night-star-grounded { animation-name: night-pulse; }
+@keyframes night-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+.night-moon { animation: night-sway 9s ease-in-out infinite; }
+@keyframes night-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.night-moon-glow { animation: night-glow 6s ease-in-out infinite; }
+@keyframes night-glow {
+  0%, 100% { opacity: 0.5; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .star { animation: none; opacity: 0.35; }
+  .night-sky image, .night-sky circle { animation: none; }
 }
 a { color: inherit; text-decoration: none; }
 a:focus-visible { outline: 2px solid var(--white); outline-offset: 6px; }
@@ -112,6 +129,8 @@ nav a:focus-visible { outline: none; color: var(--white); border-color: var(--wh
   padding: clamp(16px, 6dvh, 80px) 32px 64px;
 }
 .screen + .screen { border-top: 1px solid var(--line); }
+/* the night-sky sections fade into the page instead, so no line at their seams */
+.screen.work, .screen.contact { border-top: none; }
 .screen-content {
   position: relative;
   z-index: 1;
@@ -366,6 +385,17 @@ h2 { font-size: 28px; line-height: 1.25; font-weight: 500; letter-spacing: -0.02
 .screen.contact {
   padding-top: clamp(12px, 3svh, 40px);
   padding-bottom: 64px;
+}
+/* on its own layer so it can fade in from the page background at the top.
+   pinned to the top so the hanging clouds start at the section's edge. */
+.screen.contact::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url("/night/footer.webp") center top / cover no-repeat;
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 8%, #000 16%);
 }
 .contact-star {
   display: block;
